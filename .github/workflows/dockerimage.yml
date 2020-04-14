@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v1
+      - name: Build the Docker image
+        run: |
+          docker build -t sickwick/nginx:prod nginx/
+          docker run -d -p 80:80 sickwick/nginx:prod
+          
+  deploy:
+      needs: [build-docker]
+      runs-on: ubuntu-latest
+      name: Deploy
+
+      steps:
+      - uses: actions/checkout@v1
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: sickwick/nginx:latest
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          context: ./nginx
+
+      - name: Pull image to the server
+        run: |
+          curl ${{ secrets.PULL_NGINX }} 
