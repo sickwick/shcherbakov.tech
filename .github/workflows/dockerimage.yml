@@ -33,4 +33,33 @@ jobs:
 
       - name: Pull image to the server
         run: |
-          curl ${{ secrets.PULL_NGINX }} 
+          curl ${{ secrets.PULL_NGINX }}
+          
+  build-client:
+    runs-on: ubuntu-latest
+    name: Client
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+   
+    - name: build
+      run: |
+        cd client
+        npm i
+        docker build -t sickwick/main-site:prod .
+        docker run -d -p 80:4200 sickwick/main-site:prod
+        
+    - name: Publish container
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: sickwick/main-site:latest
+        username: ${{secrets.DOCKER_LOGIN}}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        context: ./client
+    - name: Pull image
+      run: |
+        curl ${{ secrets.PULL_CLIENT }}
