@@ -51,13 +51,13 @@ jobs:
         cd client
         npm i
         docker build -t sickwick/main-site:prod .
-        docker run -d -p 80:4200 sickwick/main-site:prod
+        docker run -d -p 4200:4200 sickwick/main-site:prod
         
     - name: Publish container
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
         name: sickwick/main-site:latest
-        username: ${{secrets.DOCKER_LOGIN}}
+        username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         context: ./client
     - name: Pull image
