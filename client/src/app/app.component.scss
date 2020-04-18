@@ -1,0 +1,32 @@
+.header {
+  grid-area: header;
+  background-color: darkred;
+}
+
+.left-main {
+  grid-area: leftCol;
+  background-color: coral;
+}
+.main {
+  grid-area: main;
+  background-color: black;
+}
+
+.right-main {
+  grid-area: rightCol;
+  background-color: grey;
+}
+
+.footer {
+  grid-area: footer;
+  background-color: chartreuse;
+}
+.container {
+  display: grid;
+  grid-template-columns: auto 12vw 45vw 12vw auto;
+  grid-template-rows: 8vh 76vh 12vh auto auto;
+  grid-template-areas:
+    "header  header header header header"
+    ". leftCol main rightCol ."
+    "footer footer footer footer footer";
+}
