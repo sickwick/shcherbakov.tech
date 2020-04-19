@@ -1,8 +1,13 @@
-FROM nginx
+FROM alpine:3.11.5
 
-COPY index.html /usr/share/nginx/html
-ADD custom.conf /etc/nginx/conf.d/
+ENV NGINX_VERSION 1.16.1-r6
+
+RUN apk add --no-cache nginx=${NGINX_VERSION} && mkdir -p /run/nginx
 
 EXPOSE 80
+
+COPY custom.conf /etc/nginx/conf.d/
+
+COPY . /opt/
 
 CMD ["nginx", "-g", "daemon off;"]
